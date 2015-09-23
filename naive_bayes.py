@@ -5,7 +5,6 @@ from numbers import Number
 from cPickle import dump, load, HIGHEST_PROTOCOL as HIGHEST_PICKLE_PROTOCOL
 
 import math
-from time import sleep
 
 from classifier import Classifier
 
@@ -62,7 +61,7 @@ class NaiveBayes(Classifier):
                     if(nextProb > 0):
                         logProb += count * math.log(nextProb)
                     else:
-                        logProb += count * math.log(self.UNKNOWN_PENALTY * self.laplaceSmooth(1, self.countPerFeature[label][feature]))
+                        logProb += count * math.log(self.UNKNOWN_PENALTY * self.laplaceSmooth(0, self.countPerFeature[label][feature]))
             # Factor in prior probability of label
             logProb += math.log(self.priorCount[label] / sum(self.priorCount.values()))
 

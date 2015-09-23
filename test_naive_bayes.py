@@ -1,7 +1,6 @@
 # -*- mode: Python; coding: utf-8 -*-
 
 from __future__ import division
-from cStringIO import StringIO
 import sys
 from random import shuffle, seed
 from unittest import TestCase, main
