@@ -111,17 +111,6 @@ class NaiveBayes(Classifier):
     def laplaceSmooth(self, elemCount, totalCount):
         return (elemCount + self.ALPHA) / (totalCount + (self.ALPHA * self.ALPHA_SCALE))
 
-    # Computes the prior and feature counts according to the current model.
-    # Especially useful when saving/loading the model via Pickel
-    def initPriorAndFeatureCounts(self):
-        self.priorCount = Counter()
-        self.countPerFeature = defaultdict(Counter)
-        for label in self._model:
-            for feature, featureVec in self._model[label].iteritems():
-                self.priorCount[label] += 1
-                for featureComp, count in featureVec.iteritems():
-                    self.countPerFeature[label][feature] += count if isinstance(count, Number) else 1
-
     # Saves the model, prior count, and count per feature
     def save(self, file):
         """Save the current model to the given file."""
