@@ -55,3 +55,9 @@ docs/_build/
 
 # PyBuilder
 target/
+
+# Assignment pdf
+PA1.pdf
+
+# Pycharms
+.idea/*
