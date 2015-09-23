@@ -1,6 +1,7 @@
 # -*- mode: Python; coding: utf-8 -*-
 
 from __future__ import division
+from cStringIO import StringIO
 import sys
 from random import shuffle, seed
 from unittest import TestCase, main
@@ -56,6 +57,19 @@ class NaiveBayesTest(TestCase):
         classifier = NaiveBayes()
         classifier.train(train)
         self.assertGreater(accuracy(classifier, test), 0.55)
+
+    def test_save_load_blogs_bag(self):
+        train, test = self.split_blogs_corpus(BagOfWords)
+        classifier = NaiveBayes()
+        classifier.train(train)
+        classifier.save('trained_model.p')
+
+        c2 = NaiveBayes()
+        c2.load('trained_model.p')
+
+        self.assertEqual(classifier.model, c2.model)
+        self.assertEqual(classifier.priorCount, c2.priorCount)
+        self.assertEqual(classifier.countPerFeature, c2.countPerFeature)
 
 if __name__ == '__main__':
     # Run all of the tests, print the results, and exit.

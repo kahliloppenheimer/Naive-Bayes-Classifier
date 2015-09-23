@@ -5,6 +5,7 @@
 from abc import ABCMeta, abstractmethod, abstractproperty
 from cPickle import dump, load, HIGHEST_PROTOCOL as HIGHEST_PICKLE_PROTOCOL
 
+
 class Classifier(object):
     """An abstract text classifier.
 
@@ -51,3 +52,7 @@ class Classifier(object):
     def classify(self, instance):
         """Classify an instance and return the expected label."""
         return None
+
+def get0():
+    return 0
+

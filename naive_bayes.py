@@ -2,8 +2,10 @@
 from __future__ import division
 from collections import defaultdict, Counter
 from numbers import Number
+from cPickle import dump, load, HIGHEST_PROTOCOL as HIGHEST_PICKLE_PROTOCOL
 
 import math
+from time import sleep
 
 from classifier import Classifier
 
@@ -23,7 +25,7 @@ class NaiveBayes(Classifier):
         #       male -> {'bag of words' -> {the: 4, and: 6, ...}, # sentences -> { # = 5 }, etc.,},
         #       female -> {'# noun phrases' -> { # = 6 }, etc.}
         #      }
-        self._model = defaultdict(lambda: defaultdict(Counter))
+        self._model = defaultdict(defaultDictOfCounters)
         # Keeps track of total # of values per feature per class across the entire corpus
         # (i.e. denominator when normalizing probability)
         # I.e. {
@@ -110,3 +112,41 @@ class NaiveBayes(Classifier):
     def laplaceSmooth(self, elemCount, totalCount):
         return (elemCount + self.ALPHA) / (totalCount + (self.ALPHA * self.ALPHA_SCALE))
 
+    # Computes the prior and feature counts according to the current model.
+    # Especially useful when saving/loading the model via Pickel
+    def initPriorAndFeatureCounts(self):
+        self.priorCount = Counter()
+        self.countPerFeature = defaultdict(Counter)
+        for label in self._model:
+            for feature, featureVec in self._model[label].iteritems():
+                self.priorCount[label] += 1
+                for featureComp, count in featureVec.iteritems():
+                    self.countPerFeature[label][feature] += count if isinstance(count, Number) else 1
+
+    # Saves the model, prior count, and count per feature
+    def save(self, file):
+        """Save the current model to the given file."""
+        if isinstance(file, basestring):
+            with open(file, "wb") as file:
+                self.save(file)
+        else:
+            dump([self.model, self.priorCount, self.countPerFeature], file, HIGHEST_PICKLE_PROTOCOL)
+
+    # Loads a file containing the model, prior count, and counts per feature
+    def load(self, file):
+        """Load a saved model from the given file."""
+        if isinstance(file, basestring):
+            with open(file, "rb") as file:
+                self.load(file)
+        else:
+            loaded = load(file)
+            self.model = loaded[0]
+            self.priorCount = loaded[1]
+            self.countPerFeature = loaded[2]
+
+
+# Module level function to be used as default function for another defaultdict.
+# This is because defaultdicts cannot be serialized with pickle when using
+# lambda expressions
+def defaultDictOfCounters():
+    return defaultdict(Counter)
