@@ -58,7 +58,7 @@ target/
 
 # Assignment specifics
 PA1.pdf
-writeup.tex
+*.tex
 
 # Pycharms
 .idea/*
