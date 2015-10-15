@@ -1,9 +1,17 @@
 # Naive-Bayes-Classifier
 
-## About
+# About
 This is my implementation of a Naive Bayes Classifier for natural language in Python. For my testing, I used a blog dataset annotated with the genders of the authors and achieved 71% accuracy during classifier evaluation.
 
-## How to classify a new type of document
+# How to run
+```Python
+blogs = BlogCorpus() # Load, regularlize, and featurize corpus of blog posts
+classifier = NaiveBayes() # Initialize classifier
+classifier.train(blogs) # Train classifier on corpus
+classifier.classify(blogs[0]) # Classify a sample blog post
+```
+
+# How to classify a new type of document
 All you need to do is add a subclass of Document that corresponds to the new type of document you'd like to classify. This subclass just needs to implement a getFeatures() method which returns a map of feature names to features, i.e.
 
 {'bag of words Feature' -> 
